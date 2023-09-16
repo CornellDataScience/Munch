@@ -1,2 +1,2 @@
-# MacrosAI
-Code for the CDS MacrosAI project
+# Munch
+Code for the CDS Munch project
