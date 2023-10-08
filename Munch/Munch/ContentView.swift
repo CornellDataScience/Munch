@@ -14,11 +14,21 @@ struct ContentView: View {
     
     var body: some View {
         VStack{
+            Image("LogoWithBg")
+                .resizable()
+                .frame(width: 300, height: 75)
+                .scaledToFit()
+                .aspectRatio(contentMode: .fit)
+                .padding(.vertical)
+                .padding(.bottom)
+            Text("Welcome!")
+                .font(.largeTitle)
+            
             
             image?.resizable()
                 .scaledToFit()
         
-            Button("Upload Camera") {
+            Button("Upload from") {
                 self.showImagePicker = true
                 
             }.padding()
