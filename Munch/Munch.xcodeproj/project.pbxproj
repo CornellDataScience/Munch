@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1F3AA852AD9A1D6005EFA7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F3AA842AD9A1D6005EFA7D /* ViewController.swift */; };
 		B504D14D2AC8A5A200339F41 /* MunchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504D14C2AC8A5A200339F41 /* MunchApp.swift */; };
 		B504D14F2AC8A5A200339F41 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504D14E2AC8A5A200339F41 /* ContentView.swift */; };
 		B504D1512AC8A5A400339F41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B504D1502AC8A5A400339F41 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B1F3AA842AD9A1D6005EFA7D /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B504D1492AC8A5A200339F41 /* Munch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Munch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B504D14C2AC8A5A200339F41 /* MunchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MunchApp.swift; sourceTree = "<group>"; };
 		B504D14E2AC8A5A200339F41 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */,
 				C99F64A42AD049800030652D /* ImagePicker.swift */,
 				B504D1502AC8A5A400339F41 /* Assets.xcassets */,
+				B1F3AA842AD9A1D6005EFA7D /* ViewController.swift */,
 				B504D1522AC8A5A400339F41 /* Preview Content */,
 			);
 			path = Munch;
@@ -263,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1F3AA852AD9A1D6005EFA7D /* ViewController.swift in Sources */,
 				C99F64A52AD049800030652D /* ImagePicker.swift in Sources */,
 				B504D14F2AC8A5A200339F41 /* ContentView.swift in Sources */,
 				C99F64A72AD08CFA0030652D /* PhotoCaptureView.swift in Sources */,

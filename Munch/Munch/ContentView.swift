@@ -11,6 +11,7 @@ struct ContentView: View {
     
     @State private var showImagePicker: Bool = false
     @State private var image: Image? = nil
+    @State private var showCamera: Bool = false
     
     var body: some View {
         VStack{
@@ -28,7 +29,7 @@ struct ContentView: View {
             image?.resizable()
                 .scaledToFit()
         
-            Button("Upload from") {
+            Button("Upload from Photos") {
                 self.showImagePicker = true
                 
             }.padding()
@@ -37,7 +38,7 @@ struct ContentView: View {
                 .cornerRadius(10)
             
             Button("Take A Photo     ") {
-                self.showImagePicker = true
+                self.showCamera = true
                 //will change this to camera opening
                 
             }.padding()
