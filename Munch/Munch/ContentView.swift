@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @State private var showView : Bool = false
     @State private var showImagePicker: Bool = false
     @State private var image: Image? = nil
     @State private var showCamera: Bool = false
     
     var body: some View {
-        VStack{
+        VStack {
             Image("LogoWithBg")
                 .resizable()
                 .frame(width: 300, height: 75)
@@ -25,12 +26,14 @@ struct ContentView: View {
             Text("Welcome!")
                 .font(.largeTitle)
             
-            
-            image?.resizable()
-                .scaledToFit()
-        
-            Button("Upload from Photos") {
+            //  image?.resizable()
+               // .scaledToFit()
+          
+                Button("Upload from      ") {
                 self.showImagePicker = true
+                self.showView = false
+
+            
                 
             }.padding()
                 .background(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
@@ -46,6 +49,8 @@ struct ContentView: View {
                 .foregroundColor(Color.white)
                 .cornerRadius(10)
             
+            NavigationLink(destination: MacrosView(), isActive: $showView) {
+                            }
         }.sheet(isPresented: self.$showImagePicker) {
             PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$image)
         }
