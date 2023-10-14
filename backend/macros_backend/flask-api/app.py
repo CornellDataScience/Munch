@@ -86,21 +86,36 @@ def populate_db(df1, df2):
         creating the edges that detail the amount of each macronutrient in every ingredient
         """
         query = (
-            f"MERGE(i:Ingredient {{name: '{ingredient}', protein: '{protein}', carbs: '{carbs}', fats: '{fats}'}})"
+            f"MERGE(i:Ingredient {{name: '{ingredient.lower()}', protein: '{protein}', carbs: '{carbs}', fats: '{fats}'}})"
         )
 
         # run query
         graph.run(query)
 
-    recipe_pantry = defaultdict(tuple)
-    ingredients = []
-    x = (df2.head())
-    clmn = list(x)
+    recipe_pantry = defaultdict(list)
+
+    for recipe in (list(df2.columns)[1:]):
+        graph.run(
+            f"MERGE(r:Recipe {{name:'{recipe.lower()}'}})"
+        )
 
     for _, r in df2.iterrows():
-        print(r)
+        ingredient = (r['Ingredients'])
+        for recipe in (list(df2.columns)[1:]):
+            quantity = r[f'{recipe}']
 
-        # add resource to endpoint
+            # if quantity of the ingredient in the recipe is greater than 0, add an edge between the ingredient and the recipe
+            if quantity > 0:
+                query = (
+                    f"MATCH (r:Recipe {{name:'{recipe.lower()}'}}), (i:Ingredient {{name: '{ingredient.lower()}'}})"
+                    f"MERGE (r)-[h:HAS]->(i)"
+                    f"SET h.quantity = {quantity}"
+                )
+                graph.run(
+                    query
+                )
+
+    # add resource to endpoint
 api.add_resource(UploadExcel, '/upload')
 
 
