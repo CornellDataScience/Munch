@@ -14,10 +14,10 @@ import AVFoundation
 
 
 class ViewController: UIViewController {
-//    private var permissionGranted = false // Flag for permission
-//    private let sessionQueue = DispatchQueue(label: "sessionQueue")
-//    private var previewLayer = AVCaptureVideoPreviewLayer()
-//    var screenRect: CGRect! = nil // For view dimensions
+   //private var permissionGranted = false // Flag for permission
+   // private let sessionQueue = DispatchQueue(label: "sessionQueue")
+   // private var previewLayer = AVCaptureVideoPreviewLayer()
+   // var screenRect: CGRect! = nil // For view dimensions
     
     
     // Capture Session

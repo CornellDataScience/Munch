@@ -48,9 +48,10 @@ struct ContentView: View {
                 .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                 .foregroundColor(Color.white)
                 .cornerRadius(10)
+                .sheet(isPresented: self.$showCamera) {
+                CameraView()
+                }
             
-            NavigationLink(destination: MacrosView(), isActive: $showView) {
-                            }
         }.sheet(isPresented: self.$showImagePicker) {
             PhotoCaptureView(showImagePicker: self.$showImagePicker, image: self.$image)
         }
