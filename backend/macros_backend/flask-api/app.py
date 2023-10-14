@@ -6,6 +6,8 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 from py2neo import Graph
+from flask import Flask, jsonify, request, render_template, redirect
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -20,6 +22,17 @@ if not os.path.exists(app.config['UPLOADS']):
 graph = Graph(
     "bolt://localhost:7687", auth=("neo4j", "12345678"))
 
+# Route to upload image
+@app.route('/upload-image', methods=['GET', 'POST'])
+def upload_image():
+    if request.method == "POST":
+        if request.files:
+            image = request.files["image"]
+            print(image)
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))                                          
+            return redirect(request.url)
+    return render_template("upload_image.html")
+    
 
 class UploadExcel(Resource):
 
