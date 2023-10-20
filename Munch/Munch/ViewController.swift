@@ -10,16 +10,16 @@ import UIKit
 import SwiftUI
 import AVFoundation
 
-// What is info.plist (privacy permissions)
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
    //private var permissionGranted = false // Flag for permission
    // private let sessionQueue = DispatchQueue(label: "sessionQueue")
    // private var previewLayer = AVCaptureVideoPreviewLayer()
    // var screenRect: CGRect! = nil // For view dimensions
-    
-    
+    var coordinator: CameraView.Coordinator?
+
+    var captureImage: ((UIImage?) -> Void)?
     // Capture Session
     var session : AVCaptureSession?
     // Photo Output
@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         button.layer.borderColor = UIColor.white.cgColor
         return button
     }()
+    
     
     
     override func viewDidLoad() {
@@ -110,11 +111,11 @@ class ViewController: UIViewController {
     }
     
     
-    @objc private func didTapTakePhoto() {
-        output.capturePhoto(with: AVCapturePhotoSettings(),
-                            delegate: self)
-    }
     
+    @objc private func didTapTakePhoto() {
+         output.capturePhoto(with: AVCapturePhotoSettings(),
+                             delegate: coordinator as! AVCapturePhotoCaptureDelegate)
+     }
     
     
     //    func requestPermission() {

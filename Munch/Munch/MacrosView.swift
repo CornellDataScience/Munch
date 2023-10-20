@@ -24,6 +24,8 @@ struct MacrosView: View {
                     .padding(.top)
                     .padding(.top)
                     .padding(.top)
+                    .padding(.top)
+                    .padding(.top)
                     .padding(.vertical)
                 
                 Spacer()

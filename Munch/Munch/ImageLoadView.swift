@@ -11,7 +11,10 @@ struct ImageLoadView: View {
     var selectedImage: Image
     @State private var isLoading: Bool = false
     @State private var beforeContinue: Bool = true
-    @State private var afterContinue: Bool = true
+    @State private var triggerError: Bool = false
+    @State private var afterContinue: Bool = false
+    @State private var buttonShow: Bool = true
+
     @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
 
 
@@ -20,6 +23,7 @@ struct ImageLoadView: View {
 
             VStack{
                 
+                //view #1: before continuing, has image and continue button
                 if beforeContinue {
                     
                     Image("LogoWithBg")
@@ -28,7 +32,6 @@ struct ImageLoadView: View {
                         .scaledToFit()
                         .aspectRatio(contentMode: .fit)
                         .padding(.vertical)
-                        .padding(.top)
                     
                     
                     
@@ -42,34 +45,34 @@ struct ImageLoadView: View {
                         .padding(.bottom)
                 }
                 
+                //view #2: has view of charts
                 if afterContinue {
                     BreakdownView()
-                        .edgesIgnoringSafeArea(.all)
-                } else {
+                        .frame(width: 300, height: 300, alignment: .center)
                     Button(action: {                     self.presentationMode.wrappedValue.dismiss()
 
                     }) {
-                        Text("SORRY! RAN INTO AN ERROR, TRY AGAIN.")
+                        Text("RETURN HOME")
                             .padding()
                             .background(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
                             .foregroundColor(Color.white)
                             .cornerRadius(10)
                     }
-                        
-                            }
-                    
-                
+                }
+                 
                 if isLoading {
                     MacrosView()
                         .edgesIgnoringSafeArea(.all)
-                } else {
+                } else if buttonShow {
                                 Button(action: {
                                     isLoading.toggle()
                                     beforeContinue = false
-                                    afterContinue = true
+                                    afterContinue = false
                                     // Simulate loading delay with DispatchQueue
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                                         isLoading = false
+                                        afterContinue = true
+                                        buttonShow = false
                                     }
                                 }) {
                                     Text("CONTINUE")
@@ -78,6 +81,8 @@ struct ImageLoadView: View {
                                         .foregroundColor(Color.white)
                                         .cornerRadius(10)
                                 }
+                            } else {
+                                
                             }
                     
                 
