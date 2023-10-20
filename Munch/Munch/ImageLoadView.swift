@@ -41,14 +41,15 @@ struct ImageLoadView: View {
                     selectedImage
                         .resizable()
                         .scaledToFit()
-                        .padding()
                         .padding(.bottom)
+                        .padding()
                 }
                 
                 //view #2: has view of charts
                 if afterContinue {
                     BreakdownView()
-                        .frame(width: 300, height: 300, alignment: .center)
+                        .scaledToFit()
+                        .aspectRatio(contentMode: .fit)
                     Button(action: {                     self.presentationMode.wrappedValue.dismiss()
 
                     }) {

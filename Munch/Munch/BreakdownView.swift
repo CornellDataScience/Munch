@@ -48,10 +48,27 @@ struct BreakdownView: View {
                     y: .value("% DV", data[2].percentage)
                 ).foregroundStyle(.pink)
                 
+            }.padding(.top)
+                .frame(width: 300, height: 300)
+            .chartXAxisLabel("Macronutrient Name", alignment: .center)
+            .chartYAxisLabel("% of Daily Value")
+            .chartYAxis {
+                AxisMarks(
+                    values: [0, 50, 100]
+                ) {
+                    AxisValueLabel(format: Decimal.FormatStyle.Percent.percent.scale(1))
+                }
+                
+                AxisMarks(
+                    values: [0, 25, 50, 75, 100]
+                ) {
+                    AxisGridLine()
+                }
             }
         } else {
-            // Fallback on earlier versions
+            Text("Charts only available in iOS 16.0+")
         }
+
         if #available(iOS 16.0, *) {
             Table(macronutrients)
             {
@@ -64,7 +81,6 @@ struct BreakdownView: View {
                 }
             }
         } else {
-            
         }
         
         
