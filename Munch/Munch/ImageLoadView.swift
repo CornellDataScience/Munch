@@ -1,0 +1,106 @@
+//
+//  ImageLoadView.swift
+//  Munch
+//
+//  Created by elizabeth song on 10/18/23.
+//
+
+import SwiftUI
+
+struct ImageLoadView: View {
+    var selectedImage: Image
+    @State private var isLoading: Bool = false
+    @State private var beforeContinue: Bool = true
+    @State private var afterContinue: Bool = true
+    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
+
+
+    var body: some View {
+        NavigationView {
+
+            VStack{
+                
+                if beforeContinue {
+                    
+                    Image("LogoWithBg")
+                        .resizable()
+                        .frame(width: 300, height: 75)
+                        .scaledToFit()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.vertical)
+                        .padding(.top)
+                    
+                    
+                    
+                    Text("Your Image:")
+                        .font(.headline)
+                    
+                    selectedImage
+                        .resizable()
+                        .scaledToFit()
+                        .padding()
+                        .padding(.bottom)
+                }
+                
+                if afterContinue {
+                    BreakdownView()
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Button(action: {                     self.presentationMode.wrappedValue.dismiss()
+
+                    }) {
+                        Text("SORRY! RAN INTO AN ERROR, TRY AGAIN.")
+                            .padding()
+                            .background(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(10)
+                    }
+                        
+                            }
+                    
+                
+                if isLoading {
+                    MacrosView()
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                                Button(action: {
+                                    isLoading.toggle()
+                                    beforeContinue = false
+                                    afterContinue = true
+                                    // Simulate loading delay with DispatchQueue
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                                        isLoading = false
+                                    }
+                                }) {
+                                    Text("CONTINUE")
+                                        .padding()
+                                        .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
+                                        .foregroundColor(Color.white)
+                                        .cornerRadius(10)
+                                }
+                            }
+                    
+                
+              /* NavigationLink(destination: MacrosView()) {
+                
+                    Button("CONTINUE") {}
+                        .padding()
+                        .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(10)
+                        .frame(width: 130, height: 90)
+                        .scaledToFit()
+                    
+                } */
+                Spacer()
+                
+            }
+            }
+        }
+    
+}
+struct ImageLoadView_Previews: PreviewProvider {
+    static var previews: some View {
+        ImageLoadView(selectedImage: Image("Logo"))
+    }
+}

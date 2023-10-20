@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MacrosView: View {
     
-    @State private var showMacrosView: Bool = false;
-    
+  //  @State private var showMacrosView: Bool = false;
+
     var body: some View {
         ZStack(alignment: .center) {
 
