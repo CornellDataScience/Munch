@@ -57,6 +57,35 @@ class UploadExcel(Resource):
         return {'message': 'File processed, database populated'}, 201
 
 
+class GetMacros(Resource):
+
+    def calculate_macros(self, nodes):
+        c, f, p = 0, 0, 0
+        for rec in nodes:
+            node = rec['i']
+            c += float(node['carbs'])
+            f += float(node['fats'])
+            p += float(node['protein'])
+        return {'carbs': c, 'fats': f, 'protein': p}
+
+    def post(self, food=None):
+        if food is None:
+            food = request.args.get('food')
+
+        query = f"""MATCH path = (r:Recipe {{name:'{food.lower()}'}})-[h:HAS]->(i:Ingredient)
+                    WHERE NOT (i)-->()
+                    RETURN i,  
+                    REDUCE(weight = 1.0, rel in relationships(path) | weight * toFloat(rel.weight)) AS pathWeight"""
+
+        nodes = graph.run(query)
+        print(nodes)
+
+        if not nodes:
+            return {'error': "Food not found"}, 400
+
+        return self.calculate_macros(nodes), 201
+
+
 def populate_db(df1, df2):
     # macronutrient setup for each ingredient
     for _, r in df1.iterrows():
@@ -69,17 +98,15 @@ def populate_db(df1, df2):
         # create the edges representing macronutrient relationships
 
         """
-        query handles the creation of the ingredient and macronutrient nodes,
-        creating the edges that detail the amount of each macronutrient in every ingredient
-        """
+            query handles the creation of the ingredient and macronutrient nodes,
+            creating the edges that detail the amount of each macronutrient in every ingredient
+            """
         query = (
             f"MERGE(i:Ingredient {{name: '{ingredient.lower()}', protein: '{protein}', carbs: '{carbs}', fats: '{fats}'}})"
         )
 
         # run query
         graph.run(query)
-
-    recipe_pantry = defaultdict(list)
 
     for recipe in (list(df2.columns)[1:]):
         graph.run(
@@ -102,9 +129,10 @@ def populate_db(df1, df2):
                     query
                 )
 
-    # add resource to endpoint
-api.add_resource(UploadExcel, '/upload')
 
+# add resources to endpoint
+api.add_resource(UploadExcel, '/upload')
+api.add_resource(GetMacros, '/breakdown/<string:food>')
 
 if __name__ == "__main__":
     app.run(debug=True)
