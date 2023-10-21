@@ -25,4 +25,4 @@ def classify_img(pil_img):
         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
 
-    print(labels[np.argmax(probs)])
+    return labels[np.argmax(probs)]
