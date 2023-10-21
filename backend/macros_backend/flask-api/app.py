@@ -5,7 +5,9 @@ from flask_restful import Resource, Api
 import pandas as pd
 from werkzeug.utils import secure_filename
 import os
-from py2neo import Graph
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 api = Api(app)
@@ -16,9 +18,9 @@ app.config['UPLOADS'] = 'uploads/'
 if not os.path.exists(app.config['UPLOADS']):
     os.makedirs(app.config['UPLOADS'])
 
-# connect to n4jDB instance
-graph = Graph(
-    "bolt://localhost:7687", auth=("neo4j", "12345678"))
+driver = GraphDatabase.driver(uri=os.environ.get("DATABASE_URL"), auth=(
+    os.environ.get("DATABASE_USERNAME"), os.environ.get("DATABASE_PASSWORD")))
+session = driver.session()
 
 
 class UploadExcel(Resource):
@@ -57,33 +59,34 @@ class UploadExcel(Resource):
         return {'message': 'File processed, database populated'}, 201
 
 
-class GetMacros(Resource):
+class Nutrients(Resource):
+    def get(self, food: str):
+        # Find the macronutrient breakdown of a given food
 
-    def calculate_macros(self, nodes):
-        c, f, p = 0, 0, 0
-        for rec in nodes:
-            node = rec['i']
-            c += float(node['carbs'])
-            f += float(node['fats'])
-            p += float(node['protein'])
-        return {'carbs': c, 'fats': f, 'protein': p}
+        query = f"""MATCH path = (root:Recipe{{name:'{food}'}})-[:HAS*]->(macros)
+                    WHERE NOT (macros)-->()
+                    RETURN macros,  
+                    REDUCE(quantity = 1.0, rel in relationships(path) | quantity * toFloat(rel.quantity)) AS quantity"""
 
-    def post(self, food=None):
-        if food is None:
-            food = request.args.get('food')
+        ingredients = session.run(query).data()
 
-        query = f"""MATCH path = (r:Recipe {{name:'{food.lower()}'}})-[h:HAS]->(i:Ingredient)
-                    WHERE NOT (i)-->()
-                    RETURN i,  
-                    REDUCE(weight = 1.0, rel in relationships(path) | weight * toFloat(rel.weight)) AS pathWeight"""
-
-        nodes = graph.run(query)
-        print(nodes)
-
-        if not nodes:
+        # Check if food is an ingredient in DB
+        if not ingredients:
+            query = f"""MATCH  (root:Ingredient{{name:'{food}'}}) where not (root)-->() return root"""
+            food = session.run(query).data()
+            if food:
+                food = food[0]['root']
+                return {'carbs': food['carbs'], 'fats': food['fats'], 'protein': food['protein']}, 201
             return {'error': "Food not found"}, 400
 
-        return self.calculate_macros(nodes), 201
+        # If food is a recipe in DB
+        carbs, fats, protein = 0.0, 0.0, 0.0
+        for ingredient in ingredients:
+            macros = ingredient['macros']
+            carbs += float(macros['carbs']) * ingredient['quantity']
+            fats += float(macros['fats']) * ingredient['quantity']
+            protein += float(macros['protein']) * ingredient['quantity']
+        return {'carbs': carbs, 'fats': fats, 'protein': protein}, 201
 
 
 def populate_db(df1, df2):
@@ -106,10 +109,10 @@ def populate_db(df1, df2):
         )
 
         # run query
-        graph.run(query)
+        session.run(query)
 
     for recipe in (list(df2.columns)[1:]):
-        graph.run(
+        session.run(
             f"MERGE(r:Recipe {{name:'{recipe.lower()}'}})"
         )
 
@@ -125,14 +128,14 @@ def populate_db(df1, df2):
                     f"MERGE (r)-[h:HAS]->(i)"
                     f"SET h.quantity = {quantity}"
                 )
-                graph.run(
+                session.run(
                     query
                 )
 
 
 # add resources to endpoint
 api.add_resource(UploadExcel, '/upload')
-api.add_resource(GetMacros, '/breakdown/<string:food>')
+api.add_resource(Nutrients, '/nutrients/<string:food>')
 
 if __name__ == "__main__":
     app.run(debug=True)
