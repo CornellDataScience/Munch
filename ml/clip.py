@@ -7,9 +7,12 @@ import sys
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
 
+
 img_inp = Image.open(sys.argv[1])
+# im1 = img_inp.crop((int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])))
+
 image = preprocess(img_inp).unsqueeze(0).to(device)
-labels = ["Man with weights", "Ronnie Coleman", "Arnold Schwarzenegger"]
+labels = ["Burger", "Bacon Burger",	"Cheese Burger","Turkey Burger", "Fish Sandwich","Chicken Sandwich",	"Mozzarella Sticks",	"Fries",	"Onion Rings",	"Churros",	"Cheese Pizza",	"Meat Pizza",	"Boneless Wings",	"Chicken Parm",	"Southwest Chicken Sub","Turkey Club",	"Fried Chicken Sandwich"]
 text = clip.tokenize(labels).to(device)
 
 
