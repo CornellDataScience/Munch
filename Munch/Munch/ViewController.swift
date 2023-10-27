@@ -18,7 +18,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
    // private var previewLayer = AVCaptureVideoPreviewLayer()
    // var screenRect: CGRect! = nil // For view dimensions
     var coordinator: CameraView.Coordinator?
-
+    private var capturedImage: UIImage?
+    @State private var isActive: Bool = false
+    @State private var isShowingImageLoadView = false
     var captureImage: ((UIImage?) -> Void)?
     // Capture Session
     var session : AVCaptureSession?
@@ -28,10 +30,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let previewLayer = AVCaptureVideoPreviewLayer()
     // Shutter Button
     private let shutterButton : UIButton = {
-        let button = UIButton(frame: CGRect(x:0, y:0, width:200, height:200))
-        button.layer.cornerRadius = 100
+        let button = UIButton(frame: CGRect(x:0, y:0, width:100, height:100))
+        button.layer.cornerRadius = 50
         button.layer.borderWidth = 10
         button.layer.borderColor = UIColor.white.cgColor
+        
         return button
     }()
     
@@ -55,7 +58,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         previewLayer.frame = view.bounds
-        shutterButton.center = CGPoint (x: view.frame.size.width / 2, y: view.frame.size.height - 200)
+        shutterButton.center = CGPoint (x: view.frame.size.width / 2, y: view.frame.size.height - 150)
     }
     
     
@@ -110,12 +113,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    
-    
-    @objc private func didTapTakePhoto() {
-         output.capturePhoto(with: AVCapturePhotoSettings(),
-                             delegate: coordinator as! AVCapturePhotoCaptureDelegate)
-     }
+
     
     
     //    func requestPermission() {
@@ -140,16 +138,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 extension ViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard let data = photo.fileDataRepresentation() else {
-            return
-        }
-        let image = UIImage(data: data)
+          guard let data = photo.fileDataRepresentation() else {
+              return
+          }
+          let image = UIImage(data: data)
+          
+          capturedImage = image
+        
+          let imageView = UIImageView(image: image)
+          imageView.contentMode = .scaleAspectFill
+          imageView.frame = view.bounds
+          view.addSubview(imageView)
+          
+          coordinator?.didCaptureImage(image)
         
         session?.stopRunning()
+
+          // Dismiss the current view controller
+      }
+    
+    @objc private func didTapTakePhoto() {
+         output.capturePhoto(with: AVCapturePhotoSettings(),
+                             delegate: coordinator as! AVCapturePhotoCaptureDelegate)
         
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFill
-        imageView.frame = view.bounds
-        view.addSubview(imageView)
-    }
-}
+       self.dismiss(animated: true) {
+            if let selectedImage = self.capturedImage {
+                self.isShowingImageLoadView = true
+            }
+        }
+                     
+        }
+     }
+
+

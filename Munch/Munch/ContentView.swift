@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Combine
+
 
 struct ContentView: View {
     
@@ -15,7 +17,11 @@ struct ContentView: View {
     @State private var showCamera: Bool = false
     @State private var showImageLoad: Bool = false
     @State private var selectedImage: Image? = nil
-    
+    @State private var isShowingPopup = false
+    @State private var isImageLoadViewActive = false
+    @State private var isShowingImageLoadView = false
+
+
     var body: some View {
         NavigationView {
             VStack {
@@ -50,16 +56,24 @@ struct ContentView: View {
                 
                 
                 Button("Take A Photo               ") {
-                    self.showCamera = true
+                    self.showCamera.toggle()
                     //will change this to camera opening
                 }.padding()
                     .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                     .foregroundColor(Color.white)
                     .cornerRadius(10)
                     .sheet(isPresented: self.$showCamera) {
-                                   CameraView(selectedImage: self.$selectedImage)
+                        CameraView(selectedImage: self.$selectedImage, isShowingPopup: self.$isShowingPopup)
                                }
+                    .onReceive(Just(isShowingImageLoadView), perform: { value in
+                                if value {
+                                    NavigationLink("", destination: ImageLoadViewWrapper(isShowingImageLoadView: $isShowingImageLoadView, selectedImage: self.selectedImage), isActive: $isShowingImageLoadView).hidden()
+                                    // Navigate to the ImageLoadViewWrapper when isShowingImageLoadView changes
+                                    // Use NavigationLink or other navigation logic here
+                                }
+                            })
                                
+                
                 if let selectedImage = self.selectedImage {
                     NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
                         
@@ -69,7 +83,7 @@ struct ContentView: View {
                             .padding(.top)
                             .frame(width: 130, height: 90)
                             .scaledToFit()
-
+                            
                         
                     }
                 }

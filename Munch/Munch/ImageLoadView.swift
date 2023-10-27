@@ -7,6 +7,23 @@
 
 import SwiftUI
 
+struct ImageLoadViewWrapper: UIViewControllerRepresentable {
+    @Binding var isShowingImageLoadView: Bool
+    var selectedImage: Image?
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        guard isShowingImageLoadView, let selectedImage = selectedImage else {
+            return UIViewController()
+        }
+        let imageLoadView = ImageLoadView(selectedImage: selectedImage)
+        return UIHostingController(rootView: imageLoadView)
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        // Update the view controller if needed
+    }
+}
+
 struct ImageLoadView: View {
     var selectedImage: Image
     @State private var isLoading: Bool = false
@@ -14,6 +31,7 @@ struct ImageLoadView: View {
     @State private var triggerError: Bool = false
     @State private var afterContinue: Bool = false
     @State private var buttonShow: Bool = true
+    
 
     @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
 

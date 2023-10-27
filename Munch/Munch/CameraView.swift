@@ -12,9 +12,12 @@ struct CameraView: UIViewControllerRepresentable {
     typealias UIViewControllerType = ViewController
        
        @Binding var selectedImage: Image?
-       
+       @Binding var isShowingPopup: Bool
+       @State private var isShowingImageLoadView = false
+
+    
        func makeCoordinator() -> Coordinator {
-           return Coordinator(selectedImage: $selectedImage)
+           return Coordinator(selectedImage: $selectedImage, isShowingPopup: $isShowingPopup)
        }
        
        func makeUIViewController(context: Context) -> ViewController {
@@ -29,9 +32,12 @@ struct CameraView: UIViewControllerRepresentable {
        
     class Coordinator: NSObject, AVCapturePhotoCaptureDelegate {
             @Binding var selectedImage: Image?
+            @Binding var isShowingPopup: Bool
             
-            init(selectedImage: Binding<Image?>) {
+            init(selectedImage: Binding<Image?>, isShowingPopup: Binding<Bool>) {
                 _selectedImage = selectedImage
+                _isShowingPopup = isShowingPopup
+
             }
             
             func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -43,8 +49,15 @@ struct CameraView: UIViewControllerRepresentable {
                 DispatchQueue.main.async {
                     // Update the @Binding variable with the captured image
                     self.selectedImage = Image(uiImage: image)
+                    self.isShowingPopup = false
+
                 }
+                
+              
             }
+        func didCaptureImage(_ image: UIImage?) {
+               // Handle the captured image if needed
+           }
         }
     /*
     typealias UIViewControllerType = ViewController
