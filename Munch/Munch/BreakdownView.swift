@@ -14,8 +14,40 @@ struct MacroNutrient: Identifiable {
     let amountg: Double
     let percentage: Double
 }
+struct URLImage: View{
+    let urlString : String
+    
+    @State var data:Data?
+    
+    var body: some View {
+        if let data = data, let uiimage = UIImage(data:data){
+            Image(uiImage:uiimage)
+                .resizable()
+                .frame(width: 130, height: 70)
+                .background(Color.gray)
+        } else {
+            Image("")
+                .frame(width:130, height:70)
+                .background(Color.gray)
+                .onAppear{
+                    fetchData()
+                }
+        }
+    }
+    private func fetchData() {
+        guard let url = URL(string:urlString) else {
+            return
+        }
+        let task = URLSession.shared.dataTask(with:url) {
+            data, _, _ in self.data = data
+        }
+        task.resume()
+    }
+}
 
 struct BreakdownView: View {
+    @StateObject var viewModel = ViewModel()
+    
     @State private var selectedRange: ClosedRange<Int>?
     @State private var numbers = (0..<10)
         .map { _ in Double.random(in: 0...10) }

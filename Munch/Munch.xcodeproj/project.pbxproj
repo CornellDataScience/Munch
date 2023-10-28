@@ -19,6 +19,7 @@
 		C90EA0E82ADB23C200836A18 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90EA0E72ADB23C200836A18 /* CameraView.swift */; };
 		C99F64A52AD049800030652D /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99F64A42AD049800030652D /* ImagePicker.swift */; };
 		C99F64A72AD08CFA0030652D /* PhotoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */; };
+		C9B4FB082AEDAF9B00973CD5 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B4FB072AEDAF9B00973CD5 /* ViewModel.swift */; };
 		C9ECFA582AE05E2F00DCEF21 /* ImageLoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ECFA572AE05E2F00DCEF21 /* ImageLoadView.swift */; };
 		C9ECFA5C2AE217B300DCEF21 /* BreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ECFA5B2AE217B300DCEF21 /* BreakdownView.swift */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,7 @@
 		C90EA0E72ADB23C200836A18 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		C99F64A42AD049800030652D /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureView.swift; sourceTree = "<group>"; };
+		C9B4FB072AEDAF9B00973CD5 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		C9ECFA572AE05E2F00DCEF21 /* ImageLoadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoadView.swift; sourceTree = "<group>"; };
 		C9ECFA5B2AE217B300DCEF21 /* BreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakdownView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,6 +121,7 @@
 				B504D1502AC8A5A400339F41 /* Assets.xcassets */,
 				B1F3AA842AD9A1D6005EFA7D /* ViewController.swift */,
 				B504D1522AC8A5A400339F41 /* Preview Content */,
+				C9B4FB072AEDAF9B00973CD5 /* ViewModel.swift */,
 			);
 			path = Munch;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9B4FB082AEDAF9B00973CD5 /* ViewModel.swift in Sources */,
 				B1F3AA852AD9A1D6005EFA7D /* ViewController.swift in Sources */,
 				C99F64A52AD049800030652D /* ImagePicker.swift in Sources */,
 				B504D14F2AC8A5A200339F41 /* ContentView.swift in Sources */,
