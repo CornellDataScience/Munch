@@ -1,4 +1,3 @@
-from collections import defaultdict
 from neo4j import GraphDatabase
 from flask import Flask, request
 from flask_restful import Resource, Api
@@ -6,6 +5,7 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv, find_dotenv
+from ml.clip_test import classify_img
 
 load_dotenv(find_dotenv())
 
