@@ -79,14 +79,7 @@ struct ImageLoadView: View {
                     }
                 }
                  
-                if isLoading {
-                    
-                    
-                    
-                    
-                    MacrosView()
-                        .edgesIgnoringSafeArea(.all)
-                } else if buttonShow {
+                 if buttonShow {
                     
                     Button(action: {
                      }) {
