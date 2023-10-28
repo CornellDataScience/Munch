@@ -6,14 +6,16 @@ from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv, find_dotenv
 from ml.clip_test import classify_img
+from PIL import Image
+import uuid
 
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 api = Api(app)
 
-app.config['DATA_UPLOADS'] = 'data_uploads/'
-app.config['IMG_UPLOADS'] = 'img_uploads/'
+app.config['DATA_UPLOADS'] = 'api/data_uploads/'
+app.config['IMG_UPLOADS'] = 'api/img_uploads/'
 
 # make the UPLOADS folder if not already there
 if not os.path.exists(app.config['DATA_UPLOADS']):
@@ -70,17 +72,26 @@ class ImageUpload(Resource):
         # set file to be the file specified
         image = request.files['file']
 
-        # handles if no file selected
-        if image.filename == '':
-            return {'error': 'No selected file'}, 400
+        # generate filename
+        filename = secure_filename(str(uuid.uuid4()))
 
-        # save the filepath
         if image:
-            filename = secure_filename(image.filename)
             filepath = os.path.join(app.config['IMG_UPLOADS'], filename)
             image.save(filepath)
 
-        return {'message': 'Image uploaded'}, 201
+        return {'message': 'Image uploaded', 'file_id': filename}, 201
+
+
+class Model(Resource):
+    def get(self, food_id: str):
+        filepath = os.path.join(app.config['IMG_UPLOADS'], food_id)
+
+        image = Image.open(filepath)
+
+        if image:
+            return {'food': classify_img(image)}, 201
+
+        return {'error': "No file found"}, 401
 
 
 class Nutrients(Resource):
@@ -161,6 +172,7 @@ def populate_db(df1, df2):
 api.add_resource(UploadExcel, '/upload')
 api.add_resource(ImageUpload, '/img_upload')
 api.add_resource(Nutrients, '/nutrients/<string:food>')
+api.add_resource(Model, '/model/<string:food_id>')
 
 if __name__ == "__main__":
     app.run(debug=True)
