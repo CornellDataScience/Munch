@@ -53,11 +53,11 @@ struct MacrosView: View {
                             .padding(.bottom)
                             .padding(.bottom)
                             .scaleEffect(isBouncing ? 1.2 : 1.0)
-                            .onAppear() {
-                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                                    isBouncing.toggle()
-                                }
-                            }
+//                            .onAppear() {
+//                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+//                                    isBouncing.toggle()
+//                                }
+//                            }
                         
                         Image("Egg")
                             .resizable()
@@ -72,12 +72,12 @@ struct MacrosView: View {
                             .padding(.bottom)
                             .padding(.bottom)
                             .aspectRatio(contentMode: .fit)
-                            .scaleEffect(isBouncing ? 1.2 : 1.0)
-                            .onAppear() {
-                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                                    isBouncing.toggle()
-                                }
-                            }
+//                            .scaleEffect(isBouncing ? 1.2 : 1.0)
+//                            .onAppear() {
+//                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+//                                    isBouncing.toggle()
+//                                }
+//                            }
                         
                         Image("Sandwich")
                             .resizable()
@@ -93,12 +93,12 @@ struct MacrosView: View {
                             .padding(.bottom)
                             .aspectRatio(contentMode: .fit)
                             .frame(alignment: Alignment.trailing)
-                            .scaleEffect(isBouncing ? 1.2 : 1.0)
-                            .onAppear() {
-                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                                    isBouncing.toggle()
-                                }
-                            }
+//                            .scaleEffect(isBouncing ? 1.2 : 1.0)
+//                            .onAppear() {
+//                                withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+//                                    isBouncing.toggle()
+//                                }
+//
                     }
                 }
 //

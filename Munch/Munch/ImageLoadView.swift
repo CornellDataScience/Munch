@@ -85,11 +85,11 @@ struct ImageLoadView: View {
             
             VStack{
                 
+                // using conditioned toggle logic instead of nagivation links between screens
                 
-                //view #1: before continuing, has image and continue button
                 if beforeContinue {
-                    
-                    Image("LogoWithBg") // dummy image
+                                    
+                    Image("LogoWithBg")
                         .resizable()
                         .frame(width: 300, height: 75)
                         .scaledToFit()
@@ -104,18 +104,16 @@ struct ImageLoadView: View {
                     selectedImage
                         .resizable()
                         .scaledToFit()
-                        .padding(.bottom)
                         .padding()
+                        .padding(.bottom)
                 }
                 
                 //view #2: has view of charts
                 if afterContinue {
                     BreakdownView()
-                        .scaledToFit()
-                        .aspectRatio(contentMode: .fit)
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                        
+                        .frame(width: 300, height: 300, alignment: .center)
+                    Button(action: {                     self.presentationMode.wrappedValue.dismiss()
+
                     }) {
                         Text("RETURN HOME")
                             .padding()
@@ -124,49 +122,31 @@ struct ImageLoadView: View {
                             .cornerRadius(10)
                     }
                 }
-                
-                
-                NavigationLink(destination: MacrosView().navigationBarBackButtonHidden(true)) {
-                    Text("CONTINUE")
-                        .padding()
-                        .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                }
-                
-                
-                //                                Button(action: {
-                //                                    isLoading.toggle()
-                //                                    beforeContinue = false
-                //                                    afterContinue = false
-                //                                    // Simulate loading delay with DispatchQueue
-                //                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                //                                        isLoading = false
-                //                                        afterContinue = true
-                //                                        buttonShow = false
-                //                                    }
-                //                                }) {
-                //                                    Text("CONTINUE")
-                //                                        .padding()
-                //                                        .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
-                //                                        .foregroundColor(Color.white)
-                //                                        .cornerRadius(10)
-                //                                }
-                
-                
-                
-                
-                /* NavigationLink(destination: MacrosView()) {
                  
-                 Button("CONTINUE") {}
-                 .padding()
-                 .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
-                 .foregroundColor(Color.white)
-                 .cornerRadius(10)
-                 .frame(width: 130, height: 90)
-                 .scaledToFit()
-                 
-                 } */
+                if isLoading {
+                    MacrosView()
+                        .edgesIgnoringSafeArea(.all)
+                } else if buttonShow {
+                                Button(action: {
+                                    isLoading.toggle()
+                                    beforeContinue = false
+                                    afterContinue = false
+                                    // Simulate loading delay with DispatchQueue
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                        isLoading = false
+                                        afterContinue = true
+                                        buttonShow = false
+                                    }
+                                }) {
+                                    Text("CONTINUE")
+                                        .padding()
+                                        .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
+                                        .foregroundColor(Color.white)
+                                        .cornerRadius(10)
+                                }
+                            } else {
+                                
+                            }
                 Spacer()
                 
             }
