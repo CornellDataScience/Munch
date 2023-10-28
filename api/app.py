@@ -1,24 +1,29 @@
 from collections import defaultdict
-from neo4j import GraphDatabase, basic_auth
-from flask import Flask, request, jsonify
+from neo4j import GraphDatabase
+from flask import Flask, request
 from flask_restful import Resource, Api
 import pandas as pd
 from werkzeug.utils import secure_filename
 import os
-from py2neo import Graph
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 api = Api(app)
 
-app.config['UPLOADS'] = 'uploads/'
+app.config['DATA_UPLOADS'] = 'data_uploads/'
+app.config['IMG_UPLOADS'] = 'img_uploads/'
 
 # make the UPLOADS folder if not already there
-if not os.path.exists(app.config['UPLOADS']):
-    os.makedirs(app.config['UPLOADS'])
+if not os.path.exists(app.config['DATA_UPLOADS']):
+    os.makedirs(app.config['DATA_UPLOADS'])
+if not os.path.exists(app.config['IMG_UPLOADS']):
+    os.makedirs(app.config['IMG_UPLOADS'])
 
-# connect to n4jDB instance
-graph = Graph(
-    "bolt://localhost:7687", auth=("neo4j", "12345678"))
+driver = GraphDatabase.driver(uri=os.environ.get("DATABASE_URL"), auth=(
+    os.environ.get("DATABASE_USERNAME"), os.environ.get("DATABASE_PASSWORD")))
+session = driver.session()
 
 
 class UploadExcel(Resource):
@@ -41,7 +46,7 @@ class UploadExcel(Resource):
         # save the filepath
         if file:
             filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOADS'], filename)
+            filepath = os.path.join(app.config['DATA_UPLOADS'], filename)
             file.save(filepath)
 
         # read specified excel file
@@ -57,33 +62,55 @@ class UploadExcel(Resource):
         return {'message': 'File processed, database populated'}, 201
 
 
-class GetMacros(Resource):
+class ImageUpload(Resource):
+    def post(self):
+        if 'file' not in request.files:
+            return {'error': 'No File'}, 400
 
-    def calculate_macros(self, nodes):
-        c, f, p = 0, 0, 0
-        for rec in nodes:
-            node = rec['i']
-            c += float(node['carbs'])
-            f += float(node['fats'])
-            p += float(node['protein'])
-        return {'carbs': c, 'fats': f, 'protein': p}
+        # set file to be the file specified
+        image = request.files['file']
 
-    def post(self, food=None):
-        if food is None:
-            food = request.args.get('food')
+        # handles if no file selected
+        if image.filename == '':
+            return {'error': 'No selected file'}, 400
 
-        query = f"""MATCH path = (r:Recipe {{name:'{food.lower()}'}})-[h:HAS]->(i:Ingredient)
-                    WHERE NOT (i)-->()
-                    RETURN i,  
-                    REDUCE(weight = 1.0, rel in relationships(path) | weight * toFloat(rel.weight)) AS pathWeight"""
+        # save the filepath
+        if image:
+            filename = secure_filename(image.filename)
+            filepath = os.path.join(app.config['IMG_UPLOADS'], filename)
+            image.save(filepath)
 
-        nodes = graph.run(query)
-        print(nodes)
+        return {'message': 'Image uploaded'}, 201
 
-        if not nodes:
+
+class Nutrients(Resource):
+    def get(self, food: str):
+        # Find the macronutrient breakdown of a given food
+
+        query = f"""MATCH path = (root:Recipe{{name:'{food}'}})-[:HAS*]->(macros)
+                    WHERE NOT (macros)-->()
+                    RETURN macros,  
+                    REDUCE(quantity = 1.0, rel in relationships(path) | quantity * toFloat(rel.quantity)) AS quantity"""
+
+        ingredients = session.run(query).data()
+
+        # Check if food is an ingredient in DB
+        if not ingredients:
+            query = f"""MATCH  (root:Ingredient{{name:'{food}'}}) where not (root)-->() return root"""
+            food = session.run(query).data()
+            if food:
+                food = food[0]['root']
+                return {'carbs': food['carbs'], 'fats': food['fats'], 'protein': food['protein']}, 201
             return {'error': "Food not found"}, 400
 
-        return self.calculate_macros(nodes), 201
+        # If food is a recipe in DB
+        carbs, fats, protein = 0.0, 0.0, 0.0
+        for ingredient in ingredients:
+            macros = ingredient['macros']
+            carbs += float(macros['carbs']) * ingredient['quantity']
+            fats += float(macros['fats']) * ingredient['quantity']
+            protein += float(macros['protein']) * ingredient['quantity']
+        return {'carbs': carbs, 'fats': fats, 'protein': protein}, 201
 
 
 def populate_db(df1, df2):
@@ -106,10 +133,10 @@ def populate_db(df1, df2):
         )
 
         # run query
-        graph.run(query)
+        session.run(query)
 
     for recipe in (list(df2.columns)[1:]):
-        graph.run(
+        session.run(
             f"MERGE(r:Recipe {{name:'{recipe.lower()}'}})"
         )
 
@@ -125,14 +152,15 @@ def populate_db(df1, df2):
                     f"MERGE (r)-[h:HAS]->(i)"
                     f"SET h.quantity = {quantity}"
                 )
-                graph.run(
+                session.run(
                     query
                 )
 
 
 # add resources to endpoint
 api.add_resource(UploadExcel, '/upload')
-api.add_resource(GetMacros, '/breakdown/<string:food>')
+api.add_resource(ImageUpload, '/img_upload')
+api.add_resource(Nutrients, '/nutrients/<string:food>')
 
 if __name__ == "__main__":
     app.run(debug=True)
