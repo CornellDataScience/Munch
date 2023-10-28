@@ -1,0 +1,9 @@
+# Created by https://www.toptal.com/developers/gitignore/api/spreadsheet
+# Edit at https://www.toptal.com/developers/gitignore?templates=spreadsheet
+
+### Spreadsheet ###
+*.xlr
+*.xls
+*.xlsx
+
+# End of https://www.toptal.com/developers/gitignore/api/spreadsheet
