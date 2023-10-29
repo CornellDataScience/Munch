@@ -32,21 +32,22 @@ struct ImageLoadView: View {
     @State private var triggerError: Bool = false
     @State private var afterContinue: Bool = false
     @State private var buttonShow: Bool = true
-    
-    
+    @State private var nutrientResponse: NutrientResponse?
+
+    struct NutrientResponse: Decodable {
+           var carbs: Double
+           var fats: Double
+           var protein: Double
+       }
     
     
     @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     
     
-    private func uploadImageOne() {
-        let image: UIImage = selectedImage // Create an Image anyhow you want
-        guard let imageData = image.pngData() else {
-               // Handle the case when selectedImage is nil or cannot be converted to UIImage
-               return
-           }
+    private func uploadImage() {
+           let imageData = selectedImage.jpegData(compressionQuality: 0.8)
            
-           var request = URLRequest(url: URL(string: "our url request")!)
+           var request = URLRequest(url: URL(string: "http://127.0.0.1:5000/img_upload")!)
            request.httpMethod = "POST"
            
            let boundary = "Boundary-\(UUID().uuidString)"
@@ -55,29 +56,52 @@ struct ImageLoadView: View {
            var body = Data()
            
            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-           body.append("Content-Disposition: form-data; name=\"title\"\r\n\r\n".data(using: .utf8)!)
-           body.append("Hello World\r\n".data(using: .utf8)!)
-           
-           body.append("--\(boundary)\r\n".data(using: .utf8)!)
-           body.append("Content-Disposition: form-data; name=\"profile_img\"; filename=\"img.jpg\"\r\n".data(using: .utf8)!)
-           body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-           body.append(imageData)
+           body.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+           body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+           body.append(imageData!)
            body.append("\r\n".data(using: .utf8)!)
            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
            
            request.httpBody = body
            
            URLSession.shared.dataTask(with: request) { data, response, error in
-               // Handle the response from the server
                if let error = error {
                    print("Error: \(error)")
                } else if let data = data {
-                   // Process the response data if needed
-                   print("Response: \(String(data: data, encoding: .utf8) ?? "")")
+                   // Handle the response data if needed
+                   let responseString = String(data: data, encoding: .utf8)
+                   print("Response: \(responseString ?? "")")
                }
            }.resume()
        }
-
+       
+       // Function to get nutrient information based on food name
+       /*private func getNutrientInformation() {
+           guard let foodName = ???) else {
+               return
+           }
+           
+           guard let url = URL(string: "http://127.0.0.1:5000/nutrients/\(foodName)") else {
+               return
+           }
+           
+           URLSession.shared.dataTask(with: url) { data, response, error in
+               if let error = error {
+                   print("Error: \(error)")
+               } else if let data = data {
+                   do {
+                       let decoder = JSONDecoder()
+                       let response = try decoder.decode(NutrientResponse.self, from: data)
+                       // Handle the nutrient information response
+                       self.nutrientResponse = response
+                   } catch {
+                       print("Error decoding JSON: \(error)")
+                   }
+               }
+           }.resume()
+       }
+    */
+    
     
     var body: some View {
         NavigationView {
