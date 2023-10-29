@@ -16,7 +16,7 @@ import Combine
         @State private var image: Image? = nil
         @State private var showCamera: Bool = false
         @State private var showImageLoad: Bool = false
-        @State private var selectedImage: Image? = nil
+        @State private var selectedImage: UIImage? = nil
         @State private var isShowingPopup = false
         @State private var isImageLoadViewActive = false
         @State private var isShowingImageLoadView = false

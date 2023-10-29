@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ImageLoadViewWrapper: UIViewControllerRepresentable {
     @Binding var isShowingImageLoadView: Bool
-    var selectedImage: Image?
+    var selectedImage: UIImage?
 
     func makeUIViewController(context: Context) -> UIViewController {
         guard isShowingImageLoadView, let selectedImage = selectedImage else {
@@ -26,7 +26,7 @@ struct ImageLoadViewWrapper: UIViewControllerRepresentable {
 
 
 struct ImageLoadView: View {
-    var selectedImage: Image
+    var selectedImage: UIImage
     @State private var isLoading: Bool = false
     @State private var beforeContinue: Bool = true
     @State private var triggerError: Bool = false
@@ -40,9 +40,8 @@ struct ImageLoadView: View {
     
     
     private func uploadImageOne() {
-        let image: Image = selectedImage // Create an Image anyhow you want
-        let uiImage: UIImage = image.asUIImage()
-        guard let imageData = uiImage.pngData() else {
+        let image: UIImage = selectedImage // Create an Image anyhow you want
+        guard let imageData = image.pngData() else {
                // Handle the case when selectedImage is nil or cannot be converted to UIImage
                return
            }
@@ -101,7 +100,9 @@ struct ImageLoadView: View {
                     Text("Your Image:")
                         .font(.headline)
                     
-                    selectedImage
+                    let selectedImageImage = Image(uiImage: selectedImage)
+                    
+                    selectedImageImage
                         .resizable()
                         .scaledToFit()
                         .padding()
@@ -154,11 +155,11 @@ struct ImageLoadView: View {
     }
     
     
-    struct ImageLoadView_Previews: PreviewProvider {
-        static var previews: some View {
-            ImageLoadView(selectedImage: Image("Logo"))
-        }
-    }
+   // struct ImageLoadView_Previews: PreviewProvider {
+    //    static var previews: some View {
+    //        ImageLoadView(selectedImage: UIImage("Logo"))
+    //    }
+  //  }
 }
 
 extension View {

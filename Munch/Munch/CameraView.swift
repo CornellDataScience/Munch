@@ -11,7 +11,7 @@ import AVFoundation
 struct CameraView: UIViewControllerRepresentable {
     typealias UIViewControllerType = ViewController
        
-       @Binding var selectedImage: Image?
+       @Binding var selectedImage: UIImage?
        @Binding var isShowingPopup: Bool
        @State private var isShowingImageLoadView = false
 
@@ -31,10 +31,10 @@ struct CameraView: UIViewControllerRepresentable {
        }
        
     class Coordinator: NSObject, AVCapturePhotoCaptureDelegate {
-            @Binding var selectedImage: Image?
+            @Binding var selectedImage: UIImage?
             @Binding var isShowingPopup: Bool
             
-            init(selectedImage: Binding<Image?>, isShowingPopup: Binding<Bool>) {
+            init(selectedImage: Binding<UIImage?>, isShowingPopup: Binding<Bool>) {
                 _selectedImage = selectedImage
                 _isShowingPopup = isShowingPopup
 
@@ -48,7 +48,7 @@ struct CameraView: UIViewControllerRepresentable {
                 
                 DispatchQueue.main.async {
                     // Update the @Binding variable with the captured image
-                    self.selectedImage = Image(uiImage: image)
+                    self.selectedImage = image
                     self.isShowingPopup = false
 
                 }
