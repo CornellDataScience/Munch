@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MacrosView: View {
+    let food_id: String
     
+    @StateObject private var viewModel = MacrosVM()
     @State private var isBouncing = false
-    
+    @State private var isReady = false
   //  @State private var showMacrosView: Bool = false;
 
     var body: some View {
@@ -106,8 +108,17 @@ struct MacrosView: View {
 //
 //                }
                 Spacer()
-
-            }
+                if (viewModel.isReady){
+                    NavigationLink(destination: NutrientsView(food: viewModel.food_name).navigationBarBackButtonHidden(true)) {
+                        Text("CONTINUE")
+                            .padding()
+                            .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(10)
+                    }
+                }
+            }.onLoad(perform: {() in viewModel.runModel(food_id: food_id)
+            })
             
         }
       
@@ -116,7 +127,7 @@ struct MacrosView: View {
 }
     struct MacrosView_Previews: PreviewProvider {
         static var previews: some View {
-            MacrosView()
+            MacrosView(food_id: "6655f517-4cbd-428f-a057-4878dc89ace9")
         }
     }
 

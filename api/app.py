@@ -89,7 +89,8 @@ class Model(Resource):
         image = Image.open(filepath)
 
         if image:
-            return {'food': classify_img(image)}, 201
+            name = classify_img(image).lower().replace(' ', '%20')
+            return {'name': name}, 201
 
         return {'error': "No file found"}, 401
 
@@ -97,6 +98,8 @@ class Model(Resource):
 class Nutrients(Resource):
     def get(self, food: str):
         # Find the macronutrient breakdown of a given food
+
+        food = food.lower()
 
         query = f"""MATCH path = (root:Recipe{{name:'{food}'}})-[:HAS*]->(macros)
                     WHERE NOT (macros)-->()

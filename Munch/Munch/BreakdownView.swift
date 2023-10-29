@@ -46,38 +46,37 @@ struct URLImage: View{
 }
 
 struct BreakdownView: View {
-    @StateObject var viewModel = ViewModel()
-    
+
     @State private var selectedRange: ClosedRange<Int>?
     @State private var numbers = (0..<10)
         .map { _ in Double.random(in: 0...10) }
-    @State private var macronutrients = [MacroNutrient(name: "Protein",
-                                                       amountg: 12.3,
-                                                       percentage: 15.5),
-                                         MacroNutrient(name: "Carbohydrates",
-                                                       amountg: 12.3,
-                                                       percentage: 15.5),
-                                         MacroNutrient(name: "Fat",
-                                                       amountg: 12.3,
-                                                       percentage: 15.5),
+    @State private var macronutrients = [
+        MacroNutrient(name: "Protein",
+                      amountg: 12.3,
+                      percentage: 15.5),
+        MacroNutrient(name: "Carbohydrates",
+                      amountg: 12.3,
+                      percentage: 15.5),
+        MacroNutrient(name: "Fat",
+                      amountg: 12.3,
+                      percentage: 15.5),
     ]
     @State private var selection: MacroNutrient.ID? = nil
     
     var body: some View {
-        
         if #available(iOS 16.0, *) {
             Chart {
                 BarMark(
-                    x: .value("Macro Category", data[0].type),
-                    y: .value("% DV", data[0].percentage)
+                    x: .value("Macro Category", "Carbs"),
+                    y: .value("% DV", 10)
                 ).foregroundStyle(.green)
                 BarMark(
-                    x: .value("Macro Category", data[1].type),
-                    y: .value("% DV", data[1].percentage)
+                    x: .value("Macro Category", "Fats"),
+                    y: .value("% DV", 10)
                 ).foregroundStyle(.purple)
                 BarMark(
-                    x: .value("Macro Category", data[2].type),
-                    y: .value("% DV", data[2].percentage)
+                    x: .value("Macro Category", "Protein"),
+                    y: .value("% DV", 10)
                 ).foregroundStyle(.pink)
                 
             }.padding(.top)
@@ -114,11 +113,8 @@ struct BreakdownView: View {
             }
         } else {
         }
-        
-        
-        
     }
-    
+
     
     struct ValuePerCategory {
         var type: String
@@ -131,9 +127,10 @@ struct BreakdownView: View {
         .init(type: "Fat", percentage: 9),
         .init(type: "Protein", percentage: 7)
     ]
-    /*
-     #Preview {
-     BreakdownView()
-     }
-     */
+}
+
+struct BreakdownView_Previews: PreviewProvider {
+    static var previews: some View {
+        BreakdownView()
+    }
 }
