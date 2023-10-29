@@ -59,6 +59,8 @@ struct CameraView: UIViewControllerRepresentable {
                // Handle the captured image if needed
            }
         }
+    
+    
     /*
     typealias UIViewControllerType = ViewController
     
