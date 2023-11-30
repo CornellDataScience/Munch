@@ -20,11 +20,16 @@ import Combine
         @State private var isShowingPopup = false
         @State private var isImageLoadViewActive = false
         @State private var isShowingImageLoadView = false
-        
+        @State private var ageInput: String = ""
+        @State private var weightInput: String = ""
+        @State private var heightInput: String = ""
+        @State private var gender: String = "Male"
+         
         
         var body: some View {
             NavigationView {
                 VStack {
+                    Spacer ()
                     Image("LogoWithBg")
                         .resizable()
                         .frame(width: 300, height: 75)
@@ -87,6 +92,67 @@ import Combine
                             
                         }
                     }
+                    Spacer()
+                HStack {
+                    Button(action: {
+                        self.showView.toggle()
+                    }) {
+                        Text("Enter User Details")
+                    }
+                    .padding()
+                    .background(Color.yellow)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding()
+                    .sheet(isPresented: self.$showView) {
+                        // Your popup content here
+                        VStack {
+                            TextField("Age (years)", text: $ageInput)
+                                .padding()
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            
+                            TextField("Weight (lbs)", text: $weightInput)
+                                .padding()
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            
+                            TextField("Height (inches)", text: $heightInput)
+                                .padding()
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            
+                            HStack {
+                                Button("Male") {
+                                    self.gender = "Male"
+                                }
+                                .padding()
+                                .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                                
+                                Button("Female") {
+                                    self.gender = "Female"
+                                }
+                                .padding()
+                                .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                            }
+                            
+                            Button("Close") {
+                                let weightInput = $weightInput.wrappedValue
+                                let ageInput = $ageInput.wrappedValue
+                                let heightInput = $heightInput.wrappedValue
+                                let ageDetails = UserDefaults.standard.set(ageInput, forKey: "Age")
+                                let weightDetails = UserDefaults.standard.set(weightInput,forKey: "Weight")
+                                let heightDetails = UserDefaults.standard.set(heightInput, forKey: "Height")
+                                self.showView.toggle()
+                            }
+                            .padding()
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                    }
+                }
                 }
             }
         }
