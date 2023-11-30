@@ -12,12 +12,16 @@ struct MacroNutrient: Identifiable {
     let id = UUID()
     let name: String
     let amountg: Double
-    let percentage: Double
+    let percentage : Double
 }
 struct URLImage: View{
     let urlString : String
     
     @State var data:Data?
+    @State private var dvfat: Double = 0.0
+    @State private var dvprotein: Double = 0.0
+    @State private var dvcarbs: Double = 0.0
+
     
     var body: some View {
         if let data = data, let uiimage = UIImage(data:data){
@@ -53,13 +57,13 @@ struct BreakdownView: View {
     @State private var macronutrients = [
         MacroNutrient(name: "Protein",
                       amountg: 12.3,
-                      percentage: 15.5),
+                      percentage: 0 ),
         MacroNutrient(name: "Carbohydrates",
                       amountg: 12.3,
-                      percentage: 15.5),
+                      percentage: 0),
         MacroNutrient(name: "Fat",
                       amountg: 12.3,
-                      percentage: 15.5),
+                      percentage: 0)
     ]
     @State private var selection: MacroNutrient.ID? = nil
     
