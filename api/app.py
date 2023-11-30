@@ -5,7 +5,7 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv, find_dotenv
-from ml.clip_test import classify_img
+from ml.clip_model import classify_img
 from PIL import Image
 import uuid
 
@@ -83,13 +83,19 @@ class ImageUpload(Resource):
 
 
 class Model(Resource):
+    def __init__(self):
+        # TODO: query database to fetch all food names
+        with open("foods.txt") as f:
+            self.food_labels = list(f.read().splitlines())
+
+
     def get(self, food_id: str):
         filepath = os.path.join(app.config['IMG_UPLOADS'], food_id)
 
         image = Image.open(filepath)
 
         if image:
-            name = classify_img(image).lower().replace(' ', '%20')
+            name = classify_img(image, self.food_labels).lower().replace(' ', '%20')
             return {'name': name}, 201
 
         return {'error': "No file found"}, 401

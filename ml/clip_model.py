@@ -4,7 +4,8 @@ from PIL import Image
 import numpy as np
 import sys
 
-def classify_img(pil_img):
+
+def classify_img(pil_img: Image.Image, labels: list[str]) -> str:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/32", device=device)
 
@@ -13,9 +14,7 @@ def classify_img(pil_img):
 
     img_inp = pil_img
     image = preprocess(img_inp).unsqueeze(0).to(device)
-    labels = ["Burger", "Bacon Burger",	"Cheese Burger", "Turkey Burger",	"Fish Sandwich",	"Chicken Sandwich",	"Mozzarella Sticks",	"Fries",	"Onion Rings",	"Churros",	"Cheese Pizza",	"Meat Pizza", "Boneless Wings",	"Chicken Parm", "Southwest Chicken Sub", "Turkey Club", "Fried Chicken Sandwich"]
     text = clip.tokenize(labels).to(device)
-
 
     with torch.no_grad():
         image_features = model.encode_image(image)
@@ -23,6 +22,5 @@ def classify_img(pil_img):
         
         logits_per_image, logits_per_text = model(image, text)
         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-
 
     return labels[np.argmax(probs)]
