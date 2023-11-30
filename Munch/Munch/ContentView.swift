@@ -122,6 +122,7 @@ import Combine
                             HStack {
                                 Button("Male") {
                                     self.gender = "Male"
+                                    UserDefaults.standard.set("Male", forKey: "Sex")
                                 }
                                 .padding()
                                 .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
@@ -130,6 +131,7 @@ import Combine
                                 
                                 Button("Female") {
                                     self.gender = "Female"
+                                    UserDefaults.standard.set("Female", forKey: "Sex")
                                 }
                                 .padding()
                                 .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
@@ -141,9 +143,9 @@ import Combine
                                 let weightInput = $weightInput.wrappedValue
                                 let ageInput = $ageInput.wrappedValue
                                 let heightInput = $heightInput.wrappedValue
-                                let ageDetails = UserDefaults.standard.set(ageInput, forKey: "Age")
-                                let weightDetails = UserDefaults.standard.set(weightInput,forKey: "Weight")
-                                let heightDetails = UserDefaults.standard.set(heightInput, forKey: "Height")
+                                UserDefaults.standard.set(ageInput, forKey: "Age")
+                                UserDefaults.standard.set(weightInput,forKey: "Weight")
+                                UserDefaults.standard.set(heightInput, forKey: "Height")
                                 self.showView.toggle()
                             }
                             .padding()
