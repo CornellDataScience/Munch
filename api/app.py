@@ -5,7 +5,7 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv, find_dotenv
-from ml.clip_test import classify_img
+from ml.clip_model import classify_img
 from PIL import Image
 import uuid
 
@@ -28,8 +28,13 @@ driver = GraphDatabase.driver(uri=os.environ.get("DATABASE_URL"), auth=(
 session = driver.session()
 
 
-class UploadExcel(Resource):
+# TODO: query database to fetch all food names upon start
+with open("api/foods.txt") as f:
+    food_labels = list(f.read().splitlines())
+    print("Read food labels")
 
+
+class UploadExcel(Resource):
     # process for uploading, reading excel file, and populating database
     def post(self):
 
@@ -89,7 +94,7 @@ class Model(Resource):
         image = Image.open(filepath)
 
         if image:
-            name = classify_img(image).lower().replace(' ', '%20')
+            name = classify_img(image, food_labels).lower().replace(' ', '%20')
             return {'name': name}, 201
 
         return {'error': "No file found"}, 401
