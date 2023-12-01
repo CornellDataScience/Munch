@@ -3,7 +3,7 @@
 //  Munch
 //
 //  Created by elizabeth song on 10/19/23.
-//
+// obsolete file.... move to nutrientsview
 
 import SwiftUI
 import Charts
@@ -100,19 +100,15 @@ struct BreakdownView: View {
     @State private var selectedRange: ClosedRange<Int>?
     @State private var numbers = (0..<10)
         .map { _ in Double.random(in: 0...10) }
-    @State private var food_protein: Double = 10
-    @State private var food_carb: Double = 10
-    @State private var food_fat: Double = 10
     
     var macronutrients: [MacroNutrient] {
         return [
-            MacroNutrient(name: "Protein", amountg: food_protein, percentage:(food_protein)/protein_count),
-            MacroNutrient(name: "Carbohydrates", amountg: food_carb, percentage: food_carb/carb_count),
-            MacroNutrient(name: "Fat", amountg: food_fat, percentage: food_fat/fat_count)
+            MacroNutrient(name: "Protein", amountg: data[0].percentage, percentage:(data[0].percentage)/protein_count),
+            MacroNutrient(name: "Carbohydrates", amountg: data[1].percentage, percentage: data[1].percentage/carb_count),
+            MacroNutrient(name: "Fat", amountg: data[2].percentage, percentage: data[2].percentage/fat_count)
         ]
     }
     @State private var selection: MacroNutrient.ID? = nil
-    
     var body: some View {
         if #available(iOS 16.0, *) {
             Chart {

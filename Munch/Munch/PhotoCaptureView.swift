@@ -3,7 +3,7 @@
 //  Munch
 //
 //  Created by elizabeth song on 10/6/23.
-//
+// you can choose images from gallery
 
 import SwiftUI
 
