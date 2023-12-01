@@ -100,18 +100,17 @@ struct BreakdownView: View {
     @State private var selectedRange: ClosedRange<Int>?
     @State private var numbers = (0..<10)
         .map { _ in Double.random(in: 0...10) }
+    @State private var food_protein: Double = 10
+    @State private var food_carb: Double = 10
+    @State private var food_fat: Double = 10
     
-    @State private var macronutrients = [
-        MacroNutrient(name: "Protein",
-                      amountg: 12.3,
-                      percentage: 0),
-        MacroNutrient(name: "Carbohydrates",
-                      amountg: 12.3,
-                      percentage: 0),
-        MacroNutrient(name: "Fat",
-                      amountg: 12.3,
-                      percentage: 0)
-    ]
+    var macronutrients: [MacroNutrient] {
+        return [
+            MacroNutrient(name: "Protein", amountg: food_protein, percentage:(food_protein)/protein_count),
+            MacroNutrient(name: "Carbohydrates", amountg: food_carb, percentage: food_carb/carb_count),
+            MacroNutrient(name: "Fat", amountg: food_fat, percentage: food_fat/fat_count)
+        ]
+    }
     @State private var selection: MacroNutrient.ID? = nil
     
     var body: some View {
@@ -119,15 +118,15 @@ struct BreakdownView: View {
             Chart {
                 BarMark(
                     x: .value("Macro Category", "Carbs"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[1].percentage)
                 ).foregroundStyle(.green)
                 BarMark(
                     x: .value("Macro Category", "Fats"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[2].percentage)
                 ).foregroundStyle(.purple)
                 BarMark(
                     x: .value("Macro Category", "Protein"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[0].percentage)
                 ).foregroundStyle(.pink)
                 
             }.padding(.top)
