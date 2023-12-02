@@ -1,0 +1,17 @@
+Burger
+Bacon Burger
+Cheese Burger
+Turkey Burger
+Fish Sandwich
+Chicken Sandwich
+Mozzarella Sticks
+Fries
+Onion Rings
+Churros
+Cheese Pizza
+Meat Pizza
+Boneless Wings
+Chicken Parm
+Southwest Chicken Sub
+Turkey Club
+Fried Chicken Sandwich
