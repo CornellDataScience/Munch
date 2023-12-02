@@ -10,6 +10,49 @@ import Charts
 
 struct NutrientsView: View {
     let food: String
+    // this is pretty repetitive
+    var ageFloat: Double {
+        let age_string = UserDefaults.standard.string(forKey: "Age") ?? "0.0"
+        return Double(age_string) ?? 0.0
+    }
+    var weightFloat: Double {
+        let weight_string = UserDefaults.standard.string(forKey: "Weight") ?? "0.0"
+        return Double(weight_string) ?? 0.0
+    }
+    var heightFloat: Double {
+        let height_string = UserDefaults.standard.string(forKey: "Height") ?? "0.0"
+        return Double(height_string) ?? 0.0
+    }
+    
+    // harris-benedict equation??
+    // we can change the equations later if these are wrong
+    let gender = UserDefaults.standard.string(forKey: "Sex") ?? "Male"
+    
+    var protein_count: Double {
+        if gender == "Male" {
+            return 0.8 * ( weightFloat / 2.2)
+        } else {
+            return 0.8 * ( weightFloat / 2.2)
+        }
+    }
+    
+    
+    var fat_count: Double {
+        if gender == "Male" {
+            return 0.3 * (66.47 + (6.24 * weightFloat) + (12.7 * heightFloat) - (6.75 * ageFloat))
+        } else {
+            return 0.3 *  (65.51 + (4.35 * weightFloat) + (4.7 * heightFloat) - (4.7 * ageFloat))
+        }
+    }
+    
+    
+    var carb_count: Double {
+        if gender == "Male" {
+            return 0.45 * (66.47 + (6.24 * weightFloat) + (12.7 * heightFloat) - (6.75 * ageFloat))
+        } else {
+            return 0.45 * (65.51 + (4.35 * weightFloat) + (4.7 * heightFloat) - (4.7 * ageFloat))
+        }
+    }
     
     @StateObject private var viewModel = NutrientsVM()
     
@@ -20,15 +63,15 @@ struct NutrientsView: View {
                 Chart {
                     BarMark(
                         x: .value("Macro Category", "Carbs"),
-                        y: .value("% DV", viewModel.nutrients.carbs/3.0)
+                        y: .value("% DV", viewModel.nutrients.carbs/carb_count*100)
                     ).foregroundStyle(.green)
                     BarMark(
                         x: .value("Macro Category", "Fats"),
-                        y: .value("% DV", viewModel.nutrients.fats/65*100)
+                        y: .value("% DV", viewModel.nutrients.fats/fat_count*100)
                     ).foregroundStyle(.purple)
                     BarMark(
                         x: .value("Macro Category", "Protein"),
-                        y: .value("% DV", viewModel.nutrients.protein*2)
+                        y: .value("% DV", viewModel.nutrients.protein/protein_count*100)
                     ).foregroundStyle(.pink)
                     
                 }.padding(.top)

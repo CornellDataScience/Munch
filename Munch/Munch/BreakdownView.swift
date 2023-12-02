@@ -3,7 +3,7 @@
 //  Munch
 //
 //  Created by elizabeth song on 10/19/23.
-//
+// obsolete file.... move to nutrientsview
 
 import SwiftUI
 import Charts
@@ -12,12 +12,17 @@ struct MacroNutrient: Identifiable {
     let id = UUID()
     let name: String
     let amountg: Double
-    let percentage: Double
+    let percentage : Double
 }
 struct URLImage: View{
     let urlString : String
+
     
     @State var data:Data?
+    @State private var dvfat: Double = 0.0
+    @State private var dvprotein: Double = 0.0
+    @State private var dvcarbs: Double = 0.0
+
     
     var body: some View {
         if let data = data, let uiimage = UIImage(data:data){
@@ -46,37 +51,78 @@ struct URLImage: View{
 }
 
 struct BreakdownView: View {
+    
+    // this is pretty repetitive
+    var ageFloat: Double {
+        let age_string = UserDefaults.standard.string(forKey: "Age") ?? "0.0"
+        return Double(age_string) ?? 0.0
+    }
+    var weightFloat: Double {
+        let weight_string = UserDefaults.standard.string(forKey: "Weight") ?? "0.0"
+        return Double(weight_string) ?? 0.0
+    }
+    var heightFloat: Double {
+        let height_string = UserDefaults.standard.string(forKey: "Height") ?? "0.0"
+        return Double(height_string) ?? 0.0
+    }
+    
+    // harris-benedict equation??
+    // we can change the equations later if these are wrong
+    let gender = UserDefaults.standard.string(forKey: "Sex") ?? "Male"
+    
+    var protein_count: Double {
+        if gender == "Male" {
+            return 0.8 * ( weightFloat / 2.2)
+        } else {
+            return 0.8 * ( weightFloat / 2.2)
+        }
+    }
+    
+    
+    var fat_count: Double {
+        if gender == "Male" {
+            return 0.3 * (66.47 + (6.24 * weightFloat) + (12.7 * heightFloat) - (6.75 * ageFloat))
+        } else {
+            return 0.3 *  (65.51 + (4.35 * weightFloat) + (4.7 * heightFloat) - (4.7 * ageFloat))
+        }
+    }
+    
+    
+    var carb_count: Double {
+        if gender == "Male" {
+            return 0.45 * (66.47 + (6.24 * weightFloat) + (12.7 * heightFloat) - (6.75 * ageFloat))
+        } else {
+            return 0.45 * (65.51 + (4.35 * weightFloat) + (4.7 * heightFloat) - (4.7 * ageFloat))
+        }
+    }
+    
 
     @State private var selectedRange: ClosedRange<Int>?
     @State private var numbers = (0..<10)
         .map { _ in Double.random(in: 0...10) }
-    @State private var macronutrients = [
-        MacroNutrient(name: "Protein",
-                      amountg: 12.3,
-                      percentage: 15.5),
-        MacroNutrient(name: "Carbohydrates",
-                      amountg: 12.3,
-                      percentage: 15.5),
-        MacroNutrient(name: "Fat",
-                      amountg: 12.3,
-                      percentage: 15.5),
-    ]
-    @State private var selection: MacroNutrient.ID? = nil
     
+    var macronutrients: [MacroNutrient] {
+        return [
+            MacroNutrient(name: "Protein", amountg: data[0].percentage, percentage:(data[0].percentage)/protein_count),
+            MacroNutrient(name: "Carbohydrates", amountg: data[1].percentage, percentage: data[1].percentage/carb_count),
+            MacroNutrient(name: "Fat", amountg: data[2].percentage, percentage: data[2].percentage/fat_count)
+        ]
+    }
+    @State private var selection: MacroNutrient.ID? = nil
     var body: some View {
         if #available(iOS 16.0, *) {
             Chart {
                 BarMark(
                     x: .value("Macro Category", "Carbs"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[1].percentage)
                 ).foregroundStyle(.green)
                 BarMark(
                     x: .value("Macro Category", "Fats"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[2].percentage)
                 ).foregroundStyle(.purple)
                 BarMark(
                     x: .value("Macro Category", "Protein"),
-                    y: .value("% DV", 10)
+                    y: .value("% DV", macronutrients[0].percentage)
                 ).foregroundStyle(.pink)
                 
             }.padding(.top)
