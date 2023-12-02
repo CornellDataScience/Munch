@@ -80,7 +80,7 @@ import Combine
                     
                     
                     if let selectedImage = self.selectedImage {
-                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
+                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage).navigationBarBackButtonHidden(true)) {
                             
                             Image("next")
                                 .resizable()

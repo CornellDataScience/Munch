@@ -30,7 +30,6 @@ struct ImageLoadView: View {
     var selectedImage: Image
     @StateObject private var viewModel = ImageLoadVM()
     @State private var isLoading: Bool = false
-    @State private var next: Bool = false
     @State private var triggerError: Bool = false
     @State private var buttonShow: Bool = false
     @State private var isPosted: Bool = false
@@ -42,46 +41,30 @@ struct ImageLoadView: View {
         NavigationView {
             
             VStack{
-                
-                
                 //view #1: before continuing, has image and continue button
-                if !next {
-                    
-                    Image("LogoWithBg") // dummy image
-                        .resizable()
-                        .frame(width: 300, height: 75)
-                        .scaledToFit()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(.vertical)
-                    
-                    
-                    
-                    Text("Your Image:")
-                        .font(.headline)
-                    
-                    selectedImage
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.bottom)
-                        .padding()
-                }
-                
-                //view #2: has view of charts
-                if next {
-                    BreakdownView()
-                        .scaledToFit()
-                        .aspectRatio(contentMode: .fit)
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                        
-                    }) {
-                        Text("RETURN HOME")
-                            .padding()
-                            .background(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(10)
-                    }
-                }
+                Image("LogoWithBg") // dummy image
+                    .resizable()
+                    .frame(width: 300, height: 75)
+                    .scaledToFit()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.vertical)
+                Text("Your Image:")
+                    .font(.headline)
+                selectedImage
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.bottom)
+                    .padding()
+                NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
+                                 Text("BACK")
+                                     .padding()
+                                     .background(Color.gray)
+                                     .foregroundColor(Color.white)
+                                     .cornerRadius(10)
+                                     .frame(alignment: .leading)
+                             }
+                                 
+        
                 
                 if (viewModel.isReady) {
                     NavigationLink(destination: MacrosView(food_id: viewModel.food_id).navigationBarBackButtonHidden(true)) {
@@ -140,3 +123,9 @@ extension UIView {
         }
     }
 }
+
+struct ImageLoadView_Previews: PreviewProvider {
+      static var previews: some View {
+          ImageLoadView(selectedImage: Image("Logo"))
+      }
+  }

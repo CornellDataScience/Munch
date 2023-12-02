@@ -21,7 +21,6 @@
 		C99F64A72AD08CFA0030652D /* PhotoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */; };
 		C9B4FB082AEDAF9B00973CD5 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B4FB072AEDAF9B00973CD5 /* ViewModel.swift */; };
 		C9ECFA582AE05E2F00DCEF21 /* ImageLoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ECFA572AE05E2F00DCEF21 /* ImageLoadView.swift */; };
-		C9ECFA5C2AE217B300DCEF21 /* BreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ECFA5B2AE217B300DCEF21 /* BreakdownView.swift */; };
 		E9AD30CA2AEED08D0073A934 /* NutrientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AD30C92AEED08D0073A934 /* NutrientsView.swift */; };
 		E9AD30CC2AEED8E00073A934 /* NutrientsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AD30CB2AEED8E00073A934 /* NutrientsVM.swift */; };
 		E9C54ACC2AEEEA1E00A365E0 /* MacrosVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C54ACB2AEEEA1E00A365E0 /* MacrosVM.swift */; };
@@ -68,7 +67,6 @@
 		C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureView.swift; sourceTree = "<group>"; };
 		C9B4FB072AEDAF9B00973CD5 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		C9ECFA572AE05E2F00DCEF21 /* ImageLoadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoadView.swift; sourceTree = "<group>"; };
-		C9ECFA5B2AE217B300DCEF21 /* BreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakdownView.swift; sourceTree = "<group>"; };
 		E9AD30C92AEED08D0073A934 /* NutrientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutrientsView.swift; sourceTree = "<group>"; };
 		E9AD30CB2AEED8E00073A934 /* NutrientsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutrientsVM.swift; sourceTree = "<group>"; };
 		E9C54ACB2AEEEA1E00A365E0 /* MacrosVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacrosVM.swift; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 				E90F0FDA2AEDBD630016CF28 /* Services */,
 				B504D14C2AC8A5A200339F41 /* MunchApp.swift */,
 				B504D14E2AC8A5A200339F41 /* ContentView.swift */,
-				C9ECFA5B2AE217B300DCEF21 /* BreakdownView.swift */,
 				C90EA0E72ADB23C200836A18 /* CameraView.swift */,
 				C99F64A62AD08CFA0030652D /* PhotoCaptureView.swift */,
 				C99F64A42AD049800030652D /* ImagePicker.swift */,
@@ -358,7 +355,6 @@
 				E9C54ACC2AEEEA1E00A365E0 /* MacrosVM.swift in Sources */,
 				E9CEEF352AEDC6A500C6F9C9 /* Nutrients.swift in Sources */,
 				C90EA0E82ADB23C200836A18 /* CameraView.swift in Sources */,
-				C9ECFA5C2AE217B300DCEF21 /* BreakdownView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,7 +518,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Munch/Preview Content\"";
-				DEVELOPMENT_TEAM = H7H62963H3;
+				DEVELOPMENT_TEAM = W2YH654JDR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -553,7 +549,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Munch/Preview Content\"";
-				DEVELOPMENT_TEAM = H7H62963H3;
+				DEVELOPMENT_TEAM = W2YH654JDR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";

@@ -80,13 +80,13 @@ struct NutrientsView: View {
                     .chartYAxisLabel("% of Daily Value")
                     .chartYAxis {
                         AxisMarks(
-                            values: [0, 50, 100]
+                            //values: [0, 50, 100]
                         ) {
                             AxisValueLabel(format: Decimal.FormatStyle.Percent.percent.scale(1))
                         }
                         
                         AxisMarks(
-                            values: [0, 25, 50, 75, 100]
+//                            values: [0, 25, 50, 75, 100]
                         ) {
                             AxisGridLine()
                         }
