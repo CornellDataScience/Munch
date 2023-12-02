@@ -9,6 +9,8 @@ import Charts
 
 
 struct NutrientsView: View {
+    
+
     let food: String
     // this is pretty repetitive
     var ageFloat: Double {
@@ -58,8 +60,13 @@ struct NutrientsView: View {
     
     var body: some View {
         VStack{
-            Text(food.replacingOccurrences(of: "%20", with: " "))
+            Text(food.replacingOccurrences(of: "%20", with: " ").uppercased())
+                .font(.title)
+                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                
             if #available(iOS 16.0, *) {
+                Text("Macronutrient vs % of Daily Value")
+                    .padding(.top)
                 Chart {
                     BarMark(
                         x: .value("Macro Category", "Carbs"),
@@ -98,6 +105,22 @@ struct NutrientsView: View {
             } else {
                 Text("Charts only available in iOS 16.0+")
             }
+            
+            // actually pass in values
+            let list_data = [["Carbs (g)", String(Int(carb_count))], ["Fats (g)", String(Int(fat_count))], ["Protein (g)", String(Int(protein_count))]]
+            List(list_data, id: \.self) { item in
+                nutrientInfoRow(metric: item[0], amount: item[1])
+            }
+        }.padding(.top, 50)
+    }
+    private func nutrientInfoRow(metric:String, amount:String)  -> some View {
+        HStack{
+            Text(metric)
+                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+            Spacer()
+            Text(amount)
+                .fontWeight(.medium)
+                .italic()
         }
     }
 }
