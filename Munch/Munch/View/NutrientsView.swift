@@ -71,15 +71,15 @@ struct NutrientsView: View {
                     BarMark(
                         x: .value("Macro Category", "Carbs"),
                         y: .value("% DV", viewModel.nutrients.carbs/carb_count*100)
-                    ).foregroundStyle(.green)
+                    ).foregroundStyle(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                     BarMark(
                         x: .value("Macro Category", "Fats"),
                         y: .value("% DV", viewModel.nutrients.fats/fat_count*100)
-                    ).foregroundStyle(.purple)
+                    ).foregroundStyle(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
                     BarMark(
                         x: .value("Macro Category", "Protein"),
                         y: .value("% DV", viewModel.nutrients.protein/protein_count*100)
-                    ).foregroundStyle(.pink)
+                    ).foregroundStyle(Color.yellow)
                     
                 }.padding(.top)
                     .frame(width: 300, height: 300)

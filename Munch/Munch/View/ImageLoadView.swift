@@ -49,12 +49,14 @@ struct ImageLoadView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(.vertical)
                 Text("Your Image:")
-                    .font(.headline)
+                    .font(.title)
                 selectedImage
                     .resizable()
+                    .cornerRadius(25.0)
                     .scaledToFit()
                     .padding(.bottom)
                     .padding()
+                HStack{
                 NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
                                  Text("BACK")
                                      .padding()
@@ -66,13 +68,14 @@ struct ImageLoadView: View {
                                  
         
                 
-                if (viewModel.isReady) {
-                    NavigationLink(destination: MacrosView(food_id: viewModel.food_id).navigationBarBackButtonHidden(true)) {
-                        Text("CONTINUE")
-                            .padding()
-                            .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(10)
+                    if (viewModel.isReady) {
+                        NavigationLink(destination: MacrosView(food_id: viewModel.food_id).navigationBarBackButtonHidden(true)) {
+                            Text("CONTINUE")
+                                .padding()
+                                .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
+                                .foregroundColor(Color.white)
+                                .cornerRadius(10)
+                        }
                     }
             
                 }
@@ -126,6 +129,6 @@ extension UIView {
 
 struct ImageLoadView_Previews: PreviewProvider {
       static var previews: some View {
-          ImageLoadView(selectedImage: Image("Logo"))
+          ImageLoadView(selectedImage: Image("AppIcon"))
       }
   }
