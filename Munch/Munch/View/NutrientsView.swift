@@ -9,6 +9,8 @@ import Charts
 
 
 struct NutrientsView: View {
+    
+
     let food: String
     // this is pretty repetitive
     var ageFloat: Double {
@@ -58,21 +60,26 @@ struct NutrientsView: View {
     
     var body: some View {
         VStack{
-            Text(food.replacingOccurrences(of: "%20", with: " "))
+            Text(food.replacingOccurrences(of: "%20", with: " ").uppercased())
+                .font(.title)
+                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                
             if #available(iOS 16.0, *) {
+                Text("Macronutrient vs % of Daily Value")
+                    .padding(.top)
                 Chart {
                     BarMark(
                         x: .value("Macro Category", "Carbs"),
                         y: .value("% DV", viewModel.nutrients.carbs/carb_count*100)
-                    ).foregroundStyle(.green)
+                    ).foregroundStyle(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                     BarMark(
                         x: .value("Macro Category", "Fats"),
                         y: .value("% DV", viewModel.nutrients.fats/fat_count*100)
-                    ).foregroundStyle(.purple)
+                    ).foregroundStyle(Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ))
                     BarMark(
                         x: .value("Macro Category", "Protein"),
                         y: .value("% DV", viewModel.nutrients.protein/protein_count*100)
-                    ).foregroundStyle(.pink)
+                    ).foregroundStyle(Color.yellow)
                     
                 }.padding(.top)
                     .frame(width: 300, height: 300)
@@ -80,13 +87,13 @@ struct NutrientsView: View {
                     .chartYAxisLabel("% of Daily Value")
                     .chartYAxis {
                         AxisMarks(
-                            values: [0, 50, 100]
+                            //values: [0, 50, 100]
                         ) {
                             AxisValueLabel(format: Decimal.FormatStyle.Percent.percent.scale(1))
                         }
                         
                         AxisMarks(
-                            values: [0, 25, 50, 75, 100]
+//                            values: [0, 25, 50, 75, 100]
                         ) {
                             AxisGridLine()
                         }
@@ -98,6 +105,22 @@ struct NutrientsView: View {
             } else {
                 Text("Charts only available in iOS 16.0+")
             }
+            
+            // actually pass in values
+            let list_data = [["Carbs (g)", String(Int(carb_count))], ["Fats (g)", String(Int(fat_count))], ["Protein (g)", String(Int(protein_count))]]
+            List(list_data, id: \.self) { item in
+                nutrientInfoRow(metric: item[0], amount: item[1])
+            }
+        }.padding(.top, 50)
+    }
+    private func nutrientInfoRow(metric:String, amount:String)  -> some View {
+        HStack{
+            Text(metric)
+                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+            Spacer()
+            Text(amount)
+                .fontWeight(.medium)
+                .italic()
         }
     }
 }

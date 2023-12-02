@@ -3,7 +3,9 @@
 //  Munch
 //
 //  Created by Bryant Park on 9/30/23.
-//main screen
+
+
+// r: 252 g: 228 b: 217
 
 import SwiftUI
 import Combine
@@ -24,6 +26,8 @@ import Combine
         @State private var weightInput: String = ""
         @State private var heightInput: String = ""
         @State private var gender: String = "Male"
+        
+        @State private var action: Int? = 0
          
         
         var body: some View {
@@ -39,13 +43,12 @@ import Combine
                         .padding(.bottom)
                     Text("Welcome!")
                         .font(.largeTitle)
-                    
-                    //  image?.resizable()
-                    // .scaledToFit()
+                        //.foregroundColor(Color(red:0.3686, green:0.4157, blue:0.4980))
                     
                     Button("Upload from Gallery   ") {
                         self.showImagePicker = true
                         self.showView = false
+                        action = 1
                         
                         
                         
@@ -72,25 +75,24 @@ import Combine
                         }
                         .onReceive(Just(isShowingImageLoadView), perform: { value in
                             if value {
-                                NavigationLink("", destination: ImageLoadViewWrapper(isShowingImageLoadView: $isShowingImageLoadView, selectedImage: self.selectedImage), isActive: $isShowingImageLoadView).hidden()
-                                // Navigate to the ImageLoadViewWrapper when isShowingImageLoadView changes
-                                // Use NavigationLink or other navigation logic here
+                                NavigationLink("", destination: ImageLoadViewWrapper(isShowingImageLoadView: $isShowingImageLoadView, selectedImage: self.selectedImage), isActive: $isShowingImageLoadView)
+                                    .navigationBarBackButtonHidden(true)
+                                    .hidden()
                             }
                         })
                     
-                    
                     if let selectedImage = self.selectedImage {
-                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
-                            
-                            Image("next")
-                                .resizable()
-                                .padding(.top)
-                                .padding(.top)
-                                .frame(width: 130, height: 90)
-                                .scaledToFit()
-                            
-                            
-                        }
+                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage), tag: 1, selection: $action) {
+                            EmptyView()
+                        }.navigationBarBackButtonHidden(true)
+//                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
+//                            Image("next")
+//                                .resizable()
+//                                .padding(.top)
+//                                .padding(.top)
+//                                .frame(width: 130, height: 90)
+//                                .scaledToFit()
+//                        }
                     }
                     Spacer()
                 HStack {
@@ -100,13 +102,22 @@ import Combine
                         Text("Enter User Details")
                     }
                     .padding()
-                    .background(Color.yellow)
+                    .background(Color(red:0.3686, green:0.4157, blue:0.4980))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding()
                     .sheet(isPresented: self.$showView) {
                         // Your popup content here
                         VStack {
+                            Image("Profile")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 200)
+                                .clipShape(Circle())
+                            Text("User Details")
+                                .font(.title)
+                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            
                             TextField("Age (years)", text: $ageInput)
                                 .padding()
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -125,7 +136,7 @@ import Combine
                                     UserDefaults.standard.set("Male", forKey: "Sex")
                                 }
                                 .padding()
-                                .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color(red:0.3686, green:0.4157, blue:0.4980))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 
@@ -134,7 +145,7 @@ import Combine
                                     UserDefaults.standard.set("Female", forKey: "Sex")
                                 }
                                 .padding()
-                                .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color(red:0.3686, green:0.4157, blue:0.4980))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                             }
@@ -149,16 +160,16 @@ import Combine
                                 self.showView.toggle()
                             }
                             .padding()
-                            .background(Color.red)
+                            .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                         }
                     }
                 }
-                }
             }
         }
     }
+}
     struct ContentView_Previews: PreviewProvider{
         static var previews: some View {
             ContentView()
