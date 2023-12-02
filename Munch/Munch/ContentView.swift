@@ -109,6 +109,11 @@ import Combine
                     .sheet(isPresented: self.$showView) {
                         // Your popup content here
                         VStack {
+                            Image("Profile")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 200)
+                                .clipShape(Circle())
                             Text("User Details")
                                 .font(.title)
                                 .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
@@ -131,7 +136,7 @@ import Combine
                                     UserDefaults.standard.set("Male", forKey: "Sex")
                                 }
                                 .padding()
-                                .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .background(gender == "Male" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color(red:0.3686, green:0.4157, blue:0.4980))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 
@@ -140,7 +145,7 @@ import Combine
                                     UserDefaults.standard.set("Female", forKey: "Sex")
                                 }
                                 .padding()
-                                .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color.gray)
+                                .background(gender == "Female" ? Color(red:0.44313725490196076, green:0.6745098039215687, blue:0.6039215686274509 ) : Color(red:0.3686, green:0.4157, blue:0.4980))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                             }
@@ -155,7 +160,7 @@ import Combine
                                 self.showView.toggle()
                             }
                             .padding()
-                            .background(Color.red)
+                            .background(Color(red: 0.8745098039215686, green: 0.34509803921568627, blue: 0.35294117647058826))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                         }

@@ -60,7 +60,7 @@ struct ImageLoadView: View {
                 NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
                                  Text("BACK")
                                      .padding()
-                                     .background(Color.gray)
+                                     .background(Color(red:0.3686, green:0.4157, blue:0.4980))
                                      .foregroundColor(Color.white)
                                      .cornerRadius(10)
                                      .frame(alignment: .leading)
