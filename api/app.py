@@ -5,7 +5,7 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv, find_dotenv
-from ml.clip_test import classify_img
+from ml.clip_model import classify_img
 from PIL import Image
 import uuid
 
@@ -28,8 +28,13 @@ driver = GraphDatabase.driver(uri=os.environ.get("DATABASE_URL"), auth=(
 session = driver.session()
 
 
-class UploadExcel(Resource):
+# TODO: query database to fetch all food names upon start
+with open("api/foods.txt") as f:
+    food_labels = list(f.read().splitlines())
+    print("Read food labels")
 
+
+class UploadExcel(Resource):
     # process for uploading, reading excel file, and populating database
     def post(self):
 
@@ -89,42 +94,42 @@ class Model(Resource):
         image = Image.open(filepath)
 
         if image:
-            name = classify_img(image).lower().replace(' ', '%20')
+            name = classify_img(image, food_labels).lower().replace(' ', '%20')
             return {'name': name}, 201
 
         return {'error': "No file found"}, 401
 
 
-class Nutrients(Resource):
-    def get(self, food: str):
-        # Find the macronutrient breakdown of a given food
+# class Nutrients(Resource):
+#     def get(self, food: str):
+#         # Find the macronutrient breakdown of a given food
 
-        food = food.lower()
+#         food = food.lower()
 
-        query = f"""MATCH path = (root:Recipe{{name:'{food}'}})-[:HAS*]->(macros)
-                    WHERE NOT (macros)-->()
-                    RETURN macros,  
-                    REDUCE(quantity = 1.0, rel in relationships(path) | quantity * toFloat(rel.quantity)) AS quantity"""
+#         query = f"""MATCH path = (root:Recipe{{name:'{food}'}})-[:HAS*]->(macros)
+#                     WHERE NOT (macros)-->()
+#                     RETURN macros,  
+#                     REDUCE(quantity = 1.0, rel in relationships(path) | quantity * toFloat(rel.quantity)) AS quantity"""
 
-        ingredients = session.run(query).data()
+#         ingredients = session.run(query).data()
 
-        # Check if food is an ingredient in DB
-        if not ingredients:
-            query = f"""MATCH  (root:Ingredient{{name:'{food}'}}) where not (root)-->() return root"""
-            food = session.run(query).data()
-            if food:
-                food = food[0]['root']
-                return {'carbs': food['carbs'], 'fats': food['fats'], 'protein': food['protein']}, 201
-            return {'error': "Food not found"}, 400
+#         # Check if food is an ingredient in DB
+#         if not ingredients:
+#             query = f"""MATCH  (root:Ingredient{{name:'{food}'}}) where not (root)-->() return root"""
+#             food = session.run(query).data()
+#             if food:
+#                 food = food[0]['root']
+#                 return {'carbs': food['carbs'], 'fats': food['fats'], 'protein': food['protein']}, 201
+#             return {'error': "Food not found"}, 400
 
-        # If food is a recipe in DB
-        carbs, fats, protein = 0.0, 0.0, 0.0
-        for ingredient in ingredients:
-            macros = ingredient['macros']
-            carbs += float(macros['carbs']) * ingredient['quantity']
-            fats += float(macros['fats']) * ingredient['quantity']
-            protein += float(macros['protein']) * ingredient['quantity']
-        return {'carbs': carbs, 'fats': fats, 'protein': protein}, 201
+#         # If food is a recipe in DB
+#         carbs, fats, protein = 0.0, 0.0, 0.0
+#         for ingredient in ingredients:
+#             macros = ingredient['macros']
+#             carbs += float(macros['carbs']) * ingredient['quantity']
+#             fats += float(macros['fats']) * ingredient['quantity']
+#             protein += float(macros['protein']) * ingredient['quantity']
+#         return {'carbs': carbs, 'fats': fats, 'protein': protein}, 201
 
 
 def populate_db(df1, df2):
@@ -174,7 +179,7 @@ def populate_db(df1, df2):
 # add resources to endpoint
 api.add_resource(UploadExcel, '/upload')
 api.add_resource(ImageUpload, '/img_upload')
-api.add_resource(Nutrients, '/nutrients/<string:food>')
+# api.add_resource(Nutrients, '/nutrients/<string:food>')
 api.add_resource(Model, '/model/<string:food_id>')
 
 if __name__ == "__main__":
