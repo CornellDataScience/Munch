@@ -8,16 +8,14 @@
 import Foundation
 import SwiftUI
 
+
+let LOCALHOST_URL_BASE = "http://127.0.0.1:5000"
+let ENDPOINT_IMAGE_UPLOAD = "/img_upload"
+let ENDPOINT_MODEL = "/model"
+
+
 class APIServices {
     static let shared = APIServices()
-    
-    let URL_HOST = "http://127.0.0.1:5000"
-    
-    let URL_IMAGE_UPLOAD = "/img_upload"
-    
-    let URL_NUTRIENTS = "/nutrients"
-    
-    let URL_MODEL = "/model"
     
     func loadResources<T:Decodable>(from path: String, onSuccess: @escaping (T)->Void, onError: @escaping (APIError)-> Void) {
 
@@ -84,7 +82,7 @@ class APIServices {
     
     func loadNutrients(food: String, onSuccess: @escaping (Nutrients)->Void){
         
-        loadResources(from: "\(URL_HOST)\(URL_NUTRIENTS)/\(food)", onSuccess: onSuccess) { error in
+        loadResources(from: "\(URL_NUTRIENTS)?food=\(food)", onSuccess: onSuccess) { error in
             debugPrint(error.errorMessage)
         }
         
@@ -92,7 +90,7 @@ class APIServices {
     
     func runModel(food_id: String, onSuccess: @escaping (Food_Name)->Void){
         
-        loadResources(from: "\(URL_HOST)\(URL_MODEL)/\(food_id)", onSuccess: onSuccess) { error in
+        loadResources(from: "\(LOCALHOST_URL_BASE)\(ENDPOINT_MODEL)/\(food_id)", onSuccess: onSuccess) { error in
             debugPrint(error.errorMessage)
         }
         
@@ -103,7 +101,7 @@ class APIServices {
         debugPrint("Posting")
         let uiImage: UIImage = image.asUIImage()
            
-        var request = URLRequest(url: URL(string: "http://127.0.0.1:5000/img_upload")!)
+        var request = URLRequest(url: URL(string: "\(LOCALHOST_URL_BASE)\(ENDPOINT_IMAGE_UPLOAD)")!)
         request.httpMethod = "POST"
 
         // Generate a boundary string for the multi-part form data
