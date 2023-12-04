@@ -80,11 +80,24 @@ import Combine
                                     .hidden()
                             }
                         })
-                    
                     if let selectedImage = self.selectedImage {
-                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage), tag: 1, selection: $action) {
-                            EmptyView()
-                        }.navigationBarBackButtonHidden(true)
+                                           NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
+                                               
+                                               Image("next")
+                                                   .resizable()
+                                                   .padding(.top)
+                                                   .padding(.top)
+                                                   .frame(width: 130, height: 90)
+                                                   .scaledToFit()
+                                               
+                                               
+                                           }
+//                    if let selectedImage = self.selectedImage {
+//                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage), tag: 1, selection: $action) {
+//                            EmptyView()
+//                        }.navigationBarBackButtonHidden(true)
+                        
+                        
 //                        NavigationLink(destination: ImageLoadView(selectedImage: selectedImage)) {
 //                            Image("next")
 //                                .resizable()
